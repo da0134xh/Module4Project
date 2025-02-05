@@ -31,73 +31,73 @@ class DunnDelivery:
             "ITEC Computer Lab": 5
         }
 
-        # Show the menu of items available for delivery
-        def show_menu(self, category=None):
-            if category:
-                #Show the menu items for the chosen category
+    # Show the menu of items available for delivery
+    def show_menu(self, category=None):
+        if category:
+            #Show the menu items for the chosen category
+            print(f"\n=== {category} ===")
+            # Loop through the items in that specific category on the menu
+            # and display them to the user
+            for item in self.menu[category]:
+                print(f"{item}: ${self.prices[item]:.2f}")
+        else:
+            #Show the entire menu
+            for category in self.menu: # First show the category name
                 print(f"\n=== {category} ===")
-                # Loop through the items in that specific category on the menu
-                # and display them to the user
+                # Show the items within the category
                 for item in self.menu[category]:
-                    print(f"{item}: ${self.price[item]:.2f}")
-            else:
-                #Show the entire menu
-                for category in self.menu: # First show the category name
-                    print(f"\n=== {category} ===")
-                    # Show the items within the category
-                    for item in self.menu[category]:
-                        print(f"{item}: ${self.prices[item]:.2f}")
+                    print(f"{item}: ${self.prices[item]:.2f}")
 
-        # Method to calculate the totla cost of the order
-        def calculate_total(self, items, has_student_id=False):
-            # Calculate the total
-            total = sum(self.prices[item] for item in items)
+    # Method to calculate the totla cost of the order
+    def calculate_total(self, items, has_student_id=False):
+        # Calculate the total
+        total = sum(self.prices[item] for item in items)
 
-            # Calculate the student discount based on the student id
-            if has_student_id and total > 10:
-                total *= 0.9
+        # Calculate the student discount based on the student id
+        if has_student_id and total > 10:
+            total *= 0.9
 
-            # This method returns the total cost of the order to the code that
-            # called the method
-            return total
+        # This method returns the total cost of the order to the code that
+        # called the method
+        return total
 
-        # Method to calculate the delivery time based on location and time of day
-        def estimate_delivery(self, location, current_hour):
-            # Calculate the base time
-            base_time = self.delivery_locations[location]
+    # Method to calculate the delivery time based on location and time of day
+    def estimate_delivery(self, location, current_hour):
+        # Calculate the base time
+        base_time = self.delivery_locations[location]
 
-            # Calculate the delivery time based on the time of day (adjust for busy times of day)
-            if (9 <= current_hour <= 10) or (11 <= current_hour <= 13):
-                return base_time + 5
+        # Calculate the delivery time based on the time of day (adjust for busy times of day)
+        if (9 <= current_hour <= 10) or (11 <= current_hour <= 13):
+            return base_time + 5
+        
+        #if they aren't ordering during a busy time, return the base time with no adjustment
+        return base_time
+
+    # Method that prints the order (receipt)
+    def print_order(self, location, items, current_hour, has_student_id=False):
+        # Display the order information
+        print("\n=== Order Summary===")
+        print(f"Delivery to {location}")
+        print("\nItems Ordered:")
+        
+        # Loop through the list of menu items they ordered
+        for item in items:
+            print(f"- {item}: ${self.prices[item]:.2f}")
+
+        # Call the methods to get the total cost and the delivery time
+        total = self.calculate_total(items, has_student_id)
+        delivery_time = self.estimate_delivery(location, current_hour)
+
+        # Display the subtotal
+        print(f"\nSubtotal: ${sum(self.prices[item] for item in items):.2f}")
             
-            #if they aren't ordering during a busy time, return the base time with no adjustment
-            return base_time
-
-        # Method that prints the order (receipt)
-        def print_order(self, location, items, current_hour, has_student_id=False):
-            # Display the order information
-            print("\n=== Order Summary===")
-            print(f"Delivery to {location}")
-            print("\nItems Ordered:")
-            
-            # Loop through the list of menu items they ordered
-            for item in items:
-                print(f"- {item}: ${self.price[item]:.2f}")
-
-            # Call the methods to get the total cost and the delivery time
-            total = self.calculate_total(items, has_student_id)
-            delivery_time = self.estimate_delivery(location, current_hour)
-
-            # Display the subtotal
-            print(f"\nSubtotal: ${sum(self.prices[item] for item in items):.2f}")
-                
-            # Calculate the total with the discount if the customer has a student id
-            if has_student_id and total < sum(self.prices[item] for item in items):
-                print("Student discount applied!")
-            
-            # display total after discount & estimated delivery time
-            print(f"Total after discount: ${total:.2f}")
-            print(f"Estimated delivery time: {delivery_time} minutes")
+        # Calculate the total with the discount if the customer has a student id
+        if has_student_id and total < sum(self.prices[item] for item in items):
+            print("Student discount applied!")
+        
+        # display total after discount & estimated delivery time
+        print(f"Total after discount: ${total:.2f}")
+        print(f"Estimated delivery time: {delivery_time} minutes")
 
 # main method is executed as soon as the program runs
 def main():
