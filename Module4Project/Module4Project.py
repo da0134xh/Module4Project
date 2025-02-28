@@ -11,7 +11,7 @@ class DunnDelivery:
         # Menu Attribute - menu of items you can order to be delivered
         self.menu = {
             "Energy Drinks": ["Monster", "Rockstar"],
-            "Coffee Drinks": ["Latte", "Cappuchino"],
+            "Coffee Drinks": ["Latte", "Cappuchino", "Cold Press", "Americano", "Colombiano"], # Added 3 new drinks
             "Breakfast":["Bagel", "Mufin", "Scone"],
             "Lunch": ["Falafel Wrap", "Hummus & Pita", "Chicken Wrap"]
         }
@@ -19,7 +19,7 @@ class DunnDelivery:
         # Prices encapsulated within the class
         self.prices = {
             "Monster": 3.99, "Rockstar": 3.99,
-            "Latte": 4.99, "Cappuchino": 4.99,
+            "Latte": 4.99, "Cappuchino": 4.99, "Cold Press": 2.49, "Americano": 6.75, "Colombiano": 8.95, # Added 3 new prices
             "Bagel": 2.99, "Muffin": 2.99, "Scone": 2.99,
             "Falafel Wrap": 8.99, "Hummus & Pita": 7.99, "Chicken Wrap": 8.99
         }
@@ -99,19 +99,57 @@ class DunnDelivery:
         print(f"Total after discount: ${total:.2f}")
         print(f"Estimated delivery time: {delivery_time} minutes")
 
+        # Priority delivery option with new totals calculation
+        print("\nWould you like priority delivery? (Y/N): ")
+        priority_delivery = input()
+
+        if priority_delivery == "Y" or priority_delivery == "y":
+            total = total + 2
+            delivery_time = delivery_time - 3
+            # display new total & new estimated delivery time
+            print(f"Priority delivery total: ${total:.2f}")
+            print(f"New estimated delivery time: {delivery_time} minutes")
+        else:
+            print("Your total and estimated delivery times will remain the same.")
+
+
+    # Method that asks user for delivery rating
+    def rate_delivery(self):
+        rate = int(input("Enter your delivery rating: "))
+        print(f"\nYou gave this delivery a rating of {rate}")
+
+    # Method that asks user for a limit price. Display all items under limit price.
+    def budget_price(self):
+        # User enters budget amount
+        print("\nEnter your budget price amount:")
+        budget = float(input())
+
+        #Display items under budget amount
+        print("\n=== Here are the menu items within your budget ===")
+        for item in self.prices:
+            if self.prices[item] <= budget:
+                print(f"{item}: ${self.prices[item]:.2f}")
+
+
 # main method is executed as soon as the program runs
 def main():
     #Create a new delivery object - instantiating a new object
     delivery = DunnDelivery()
 
+    # Method that searches for items under a certain price
+    delivery.budget_price()
+
     # Show menu
     delivery.show_menu("Coffee Drinks")
 
     # Sample order at 9:30 AM (peak morning hour)
-    order = ["Latte", "Bagel"]
+    order = ["Cold Press", "Colombiano"] # Changed order to test new drinks
 
-    #Display receipt for the order
+    # Display receipt for the order
     delivery.print_order("ITEC Computer Lab", order, 9, has_student_id=True)
+
+    # Method that lets customers rate their delivery (1-5 stars)
+    delivery.rate_delivery()
 
 # Add the line of code to automatically call the main method
 if __name__ == "__main__":
